@@ -23,7 +23,10 @@ import socket
 import struct
 import logging
 from threading import Thread, Event
-from Queue import Queue
+try:
+    from Queue import Queue # python version <2.7 or <3.5
+except ImportError:
+    from queue import Queue # python version <= 2.7 or 3.5
 
 try:
     # PyCrypto is much faster, but requires a built binary
@@ -118,7 +121,7 @@ class Connection(object):
         comm_status = struct.unpack('>i', self._socket.recv(4))[0]
         LOGGER.debug('Status: %i', comm_status)
         bytes_received = 0
-        message = ""
+        message = bytes("","utf-8")
         
         while bytes_received < message_length:
             if message_length - bytes_received >= 1024:
@@ -151,7 +154,7 @@ class Connection(object):
         all_bytes += struct.pack('>i', 2)
         self._id += 1
         for char in content:
-            all_bytes += struct.pack('>c', char)
+            all_bytes += struct.pack('>c', char.encode("utf-8"))
 
         encrypted_bytes = self._crypt.encrypt(all_bytes)
 
@@ -253,8 +256,8 @@ class EncryptDecrypt(object):
     KEY_LENGTH = 24
     def __init__(self, passPhrase):
         key = PBKDF2(
-            bytes(passPhrase),
-            bytes(EncryptDecrypt.SALT),
+            bytes(passPhrase,'ascii'),
+            bytes(EncryptDecrypt.SALT,'ascii'),
             iterations=EncryptDecrypt.ITERACTIONCOUNT
         ).read(EncryptDecrypt.KEY_LENGTH)
         iv = '\0\0\0\0\0\0\0\0'
@@ -349,7 +352,7 @@ class Message(object):
         self.type = struct.unpack('>i', message[8:12])[0]
 
         # The rest is the message
-        splits = message[message_head:].split('\r', 2)
+        splits = str(message[message_head:]).split('\r', 2)
         if len(splits) < 2:
             self.command = splits[0]
             self.content = ''
