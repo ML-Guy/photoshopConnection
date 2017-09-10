@@ -1,4 +1,4 @@
-from pyps import Connection, EventListener, ConnectionError
+from .pyps import Connection, EventListener, ConnectionError
 import json
 import multiprocessing
 import os

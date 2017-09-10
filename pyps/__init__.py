@@ -9,7 +9,7 @@ Python Photoshop
 :license: MIT, see LICENSE for more details
 """
 
-from pyps import Connection, EventListener, ConnectionError
+from .psif import PSif,Connection, EventListener, ConnectionError
 
 __title__ = 'pyps'
 __author__ = 'Brett Dixon'
@@ -18,4 +18,4 @@ __version__ = '0.5.4'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2015 Brett Dixon'
 
-__all__ = ['Connection', 'EventListener', 'ConnectionError']
+__all__ = ['PSif','Connection', 'EventListener', 'ConnectionError']

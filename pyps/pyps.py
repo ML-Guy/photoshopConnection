@@ -34,7 +34,7 @@ try:
     PYCRYPTO = True
 except ImportError:
     # py_des is pure python, but slower.  Should be ok for sending scripts
-    import py_des
+    from . import py_des
     PYCRYPTO = False
 
 from pbkdf2 import PBKDF2
