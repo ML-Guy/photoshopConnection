@@ -121,7 +121,7 @@ class Connection(object):
         comm_status = struct.unpack('>i', self._socket.recv(4))[0]
         LOGGER.debug('Status: %i', comm_status)
         bytes_received = 0
-        message = bytes("","utf-8")
+        message = str("").encode("utf-8")
         
         while bytes_received < message_length:
             if message_length - bytes_received >= 1024:
@@ -256,8 +256,8 @@ class EncryptDecrypt(object):
     KEY_LENGTH = 24
     def __init__(self, passPhrase):
         key = PBKDF2(
-            bytes(passPhrase,'ascii'),
-            bytes(EncryptDecrypt.SALT,'ascii'),
+            str(passPhrase).encode('ascii'),
+            str(EncryptDecrypt.SALT).encode('ascii'),
             iterations=EncryptDecrypt.ITERACTIONCOUNT
         ).read(EncryptDecrypt.KEY_LENGTH)
         iv = '\0\0\0\0\0\0\0\0'
